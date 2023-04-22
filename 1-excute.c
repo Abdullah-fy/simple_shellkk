@@ -1,13 +1,12 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "main.h"
 
-void run_shell() {
+void run_shell()
+{
 	char *prompt = "simple_shell$ ";
 	char *command = NULL;
 	size_t command_size = 0;
 	ssize_t nread_char;
+	pid_t pid;
 
 	while (1)
 	{
@@ -29,7 +28,7 @@ void run_shell() {
 		}
 
 		/*Fork a new process*/
-		pid_t pid = fork();
+		pid = fork();
 		if (pid == -1)
 		{
 			perror("fork");
@@ -55,7 +54,13 @@ void run_shell() {
 	free(command);
 }
 
-int main(int argc, char *argv[]) {
+/*
+	i delete int main(int argc, char *argv[])
+	from main give me error
+	because they unused
+*/
+int main(void)
+{
 	run_shell();
 	return 0;
 }
