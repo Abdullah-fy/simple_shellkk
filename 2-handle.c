@@ -1,5 +1,7 @@
 #include "main.h"
 
+pid_t find_command(char *command);
+
 void run_shell()
 {
 		char *prompt = "simple_shell$ ";
@@ -71,6 +73,25 @@ void run_shell()
 	/*Free memory allocated by getline()*/
 		free(command);
 
+}
+
+pid_t find_command(char *command)
+{
+    char *path = getenv("PATH");
+    char *token = strtok(path, ":");
+    while (token != NULL)
+    {
+        char *full_path = malloc(strlen(token) + strlen(command) + 2);
+        sprintf(full_path, "%s/%s", token, command);
+        if (access(full_path, X_OK) != -1)
+        {
+            free(full_path);
+            return 1;
+        }
+        free(full_path);
+        token = strtok(NULL, ":");
+    }
+    return -1;
 }
 
 /*

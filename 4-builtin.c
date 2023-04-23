@@ -73,8 +73,30 @@ void run_shell()
     free(command);
 
 
+    /*
+        i delete pid_t find_command(char *command);
+        from here
     pid_t find_command(char *command);
-/* Rest of code... */
+    */
+}
+
+pid_t find_command(char *command)
+{
+        char *path = getenv("PATH");
+        char *token = strtok(path, ":");
+        while (token != NULL)
+        {
+            char *full_path = malloc(strlen(token) + strlen(command) + 2);
+            sprintf(full_path, "%s/%s", token, command);
+            if (access(full_path, X_OK) != -1)
+            {
+                free(full_path);
+                return 1;
+            }
+            free(full_path);
+            token = strtok(NULL, ":");
+        }
+        return -1;
 }
 
 /*
