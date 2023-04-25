@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -35,6 +34,7 @@ void run_shell()
                 else if (pid == 0)
                 {
                         char *args[] = {"command", NULL};
+
                         execve(command, args, NULL);
                         printf("%s: command not found\n", command);
                         exit(EXIT_FAILURE);
@@ -47,10 +47,10 @@ void run_shell()
         free(command);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
         (void)argc;
         (void)argv;
         run_shell();
-        return 0;
+        return (0);
 }
