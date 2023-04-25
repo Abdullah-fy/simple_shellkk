@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
-/**
- * run_shell - excute the fiel
- */
 void run_shell(void)
 {
 char *prompt = "simple_shell$ ";
