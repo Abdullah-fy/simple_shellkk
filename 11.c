@@ -3,61 +3,54 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
-void run_shell() {
-char *prompt = "simple_shell$ ";
-char *command = NULL;
-size_t command_size = 0;
-ssize_t nread_char;
-pid_t pid;
-while (1)
+
+void run_shell()
 {
-        /* Display prompt and read command from user*/
-        printf("%s", prompt);
-        nread_char = getline(&command, &command_size, stdin);
+        char *prompt = "simple_shell$ ";
+        char *command = NULL;
+        size_t command_size = 0;
+        ssize_t nread_char;
+        pid_t pid;
 
-        /* Handle end of file (Ctrl+D)*/
-        if (nread_char == -1)
+        while (1)
         {
-                printf("\n");
-                break;
+                printf("%s", prompt);
+                nread_char = getline(&command, &command_size, stdin);
+
+                if (nread_char == -1)
+                {
+                        printf("\n");
+                        break;
+                }
+                if (command[nread_char - 1] == '\n')
+                {
+                        command[nread_char - 1] = '\0';
+                }
+                pid = fork();
+                if (pid == -1)
+                {
+                        perror("fork");
+                        exit(EXIT_FAILURE);
+                }
+                else if (pid == 0)
+                {
+                        char *args[] = {"command", NULL};
+                        execve(command, args, NULL);
+                        printf("%s: command not found\n", command);
+                        exit(EXIT_FAILURE);
+                }
+                else
+                {
+                        wait(NULL);
+                }
         }
-
-        /* Remove newline character from input*/
-        if (command[nread_char - 1] == '\n')
-        {
-                command[nread_char - 1] = '\0';
-        }
-
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-    else if (pid == 0)
-    {
-       /*Child process*/
-        char *args[] = {"command", NULL};
-        execve(command, args, NULL);
-
-        /* If we get here, exec failed*/
-        printf("%s: command not found\n", command);
-        exit(EXIT_FAILURE);
-    }
-     else
-    {
-        /* Parent process*/
-        wait(NULL);
-    }
-}
-
-/* Free memory allocated by getline()*/
-free(command);
-
+        free(command);
 }
 
 int main()
 {
-run_shell();
-return 0;
+        (void)argc;
+        (void)argv;
+        run_shell();
+        return 0;
 }
