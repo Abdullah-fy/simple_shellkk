@@ -15,6 +15,7 @@ void run_shell()
         char cmd_path[1024];
         char *args[MAX_ARGS];
         char path_copy[1024];
+        char *arg;
 
         while (1)
         {
@@ -31,7 +32,7 @@ void run_shell()
                         command[nread_char - 1] = '\0';
 
                 argc = 0;
-                char *arg = strtok(command, " ");
+                arg = strtok(command, " ");
 
                 while (arg != NULL)
                 {
